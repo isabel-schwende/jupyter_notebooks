@@ -1,0 +1,36 @@
+Explanation on the model choice
+
+
+I've been working mostly with CNNs and image data, so I decided that I wanted to try to use convolutional layers to solve this problem. 
+
+I checked the literature for sentence classification with CNNs and I found some research papers on the topic of sentiment analysis like:
+
+ [1]"Convolutional Neural Networks for Sentence Classification" (2014, https://arxiv.org/pdf/1408.5882.pdf)
+ [2]"A Sensitivity Analysis of (and Practitioners’ Guide to) Convolutional Neural Networks for Sentence Classification"  (2016, https://arxiv.org/pdf/1510.03820.pdf)
+
+I chose this architecture since I thought the best way would be embedding the data in simple one-hot vectors for the characters and then to learn better features from the simple embedding using convolutions. On Top of that I put LSTMs for the classification part. 
+
+Since it's a multiclass problem, I've picked categorical crossentropy on a final softmax layer for computing the loss. This seems to be pretty standard.
+
+I've realized during my sanity checks that the samples are not evenly distributed regarding classes. I added several mechanisms to adjust my training procedure:
+- sampling
+- non-standard weight initialization
+- class dependend weights in loss computation
+
+However, the network never increased accuracy beyond 20% and usually got stuck around 17%. (predicting all test samples to be from the same class). 
+I've tried adjusting the hyperparameters:
+- sampling split in range 1.0 to 3.5
+- batch size in range 32 to 512
+- learning rate in range 0.01 to 0.0001
+- mu parameter for class weights
+- optimizer method  Adam, Nadam, RMSprop
+- depth of network between 800,000 and 3,500,000 parameters
+- filter length in range 5 to 19
+- feature map size in range 100 to 400
+
+Unfortunately, I wasn't able to find a parameter setting to make training successful. Possible reasons are:
+- bad embedding,  possible to try something like char2vec
+- small data size 
+- bad architecture
+- using 2D convolution and pooling instead of 1D
+- CNNS don't work for this problem (that would be sad)
