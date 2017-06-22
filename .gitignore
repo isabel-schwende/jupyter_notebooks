@@ -1,4 +1,5 @@
 # ignore txt files of the data anywhere in the repo
 *.txt
 !model_explanation.txt
+!ytest.txt
 */checkpoints/
